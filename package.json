@@ -25,5 +25,8 @@
     "platforms": [
       "android"
     ]
+  },
+  "dependencies": {
+    "jquery-xmlrpc": "^0.4.4"
   }
 }

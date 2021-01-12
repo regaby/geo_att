@@ -24,11 +24,11 @@ document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
+   console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
+   document.getElementById('deviceready').classList.add('ready');
 
-    document.getElementById("getPosition").addEventListener("click", getPosition);
-document.getElementById("watchPosition").addEventListener("click", watchPosition);	
+   document.getElementById("sendAtt").addEventListener("click", sendAtt);   
+   
 }
 
 
@@ -55,10 +55,33 @@ function getPosition() {
    }
 }
 
+function sendAtt(){
+   var options = {
+      enableHighAccuracy: true,
+      maximumAge: 3600000
+   }
+   var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+
+   function onSuccess(position) {
+      const URL =  $('#url').val();
+      const user = $('#user').val();
+      const pass = $('#password').val();
+      $.post( URL, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
+      .done(function( data ) {
+       alert( "Data Loaded: " + data );
+     });
+   };
+
+   function onError(error) {
+      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n')
+   }
+
+}
+
 function watchPosition() {
    var options = {
       maximumAge: 3600000,
-      timeout: 3000,
+      timeout: 3000, 
       enableHighAccuracy: true,
    }
    var watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);

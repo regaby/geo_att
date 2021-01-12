@@ -29,26 +29,31 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"-->
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
         <meta name="color-scheme" content="light dark">
         <link rel="stylesheet" href="css/index.css">
-        <title>Hello World</title>
+        <title>Asistencia</title>
     </head>
     <body>
         <div class="app">
-            <h1>Apache Cordova</h1>
+            <h1>Asistencia</h1>
             <div id="deviceready" class="blink">
 
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-                <button id = "getPosition">CURRENT POSITION</button>
-<button id = "watchPosition">WATCH POSITION</button>
+                <p class="event listening">ok</p>
+                <p class="event received">>Preparado</p>
+                <input type="text" id="url" placeholder="URL" value="http://192.168.0.224:8069/attendace">
+                <input type="text" id="user" placeholder="usuario">
+                <input type="password" id="password" placeholder="password">
+                <button id = "sendAtt">Enviar Asistencia</button>
             </div>
         </div>
         <script src="cordova.js"></script>
+        <script src="js/jquery-1.8.1.js"></script>
         <script src="js/index.js"></script>
+
     </body>
 </html>
