@@ -16,6 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+var loged = false;
+var user = 'regaby@gmail.com';
+var pass = 'test';
+const URL =  'https://empleados.polyfilm.com.ar/attendace';
 
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
@@ -25,51 +29,54 @@ function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-   document.getElementById('deviceready').classList.add('ready');
+   //document.getElementById('deviceready').classList.add('ready');
+   user = localStorage.getItem("user");
+   pass = localStorage.getItem("pass");
+   //$('#user').val('regaby@gmail.com');
+   //$('#password').val('test');
 
+   if (user){
+      $('#login').hide();
+      $('#attendance').show();
+   } else{
+      $('#login').show();
+      $('#attendance').hide();
+
+   }
+   document.getElementById("loginbtn").addEventListener("click", sendloginAtt);   
    document.getElementById("sendAtt").addEventListener("click", sendAtt);   
+   document.getElementById("logout").addEventListener("click", logOut);   
+
    
 }
 
 
-function getPosition() {
+function sendloginAtt(){
    var options = {
       enableHighAccuracy: true,
-      maximumAge: 3600000
+      maximumAge: 0,
+      timeout: 5000,      
    }
    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 
    function onSuccess(position) {
-      alert('Latitude: '          + position.coords.latitude          + '\n' +
-         'Longitude: '         + position.coords.longitude         + '\n' +
-         'Altitude: '          + position.coords.altitude          + '\n' +
-         'Accuracy: '          + position.coords.accuracy          + '\n' +
-         'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-         'Heading: '           + position.coords.heading           + '\n' +
-         'Speed: '             + position.coords.speed             + '\n' +
-         'Timestamp: '         + position.timestamp                + '\n');
-   };
-
-   function onError(error) {
-      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-   }
-}
-
-function sendAtt(){
-   var options = {
-      enableHighAccuracy: true,
-      maximumAge: 3600000
-   }
-   var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
-
-   function onSuccess(position) {
-      const URL =  $('#url').val();
-      const user = $('#user').val();
-      const pass = $('#password').val();
+      user = $('#user').val();
+      pass = $('#password').val();
       $.post( URL, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
       .done(function( data ) {
-       alert( "Data Loaded: " + data );
-     });
+
+         $('#login').hide();
+         $('#attendance').show();
+
+         alert(data);
+          localStorage.setItem("user", user);
+          localStorage.setItem("pass",pass);
+
+
+     }).fail(function(xhr, status, error) {
+        alert(status);
+        alert(error);
+    });
    };
 
    function onError(error) {
@@ -78,26 +85,33 @@ function sendAtt(){
 
 }
 
-function watchPosition() {
+function sendAtt(){
    var options = {
-      maximumAge: 3600000,
-      timeout: 3000, 
       enableHighAccuracy: true,
+      maximumAge: 3600000
    }
-   var watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+   var watchID = navigator.geolocation.getCurrentPosition(onSuccess2, onError2, options);
 
-   function onSuccess(position) {
-      alert('Latitude: '          + position.coords.latitude          + '\n' +
-         'Longitude: '         + position.coords.longitude         + '\n' +
-         'Altitude: '          + position.coords.altitude          + '\n' +
-         'Accuracy: '          + position.coords.accuracy          + '\n' +
-         'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-         'Heading: '           + position.coords.heading           + '\n' +
-         'Speed: '             + position.coords.speed             + '\n' +
-         'Timestamp: '         + position.timestamp                + '\n');
+   function onSuccess2(position) {
+      $.post( URL, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
+      .done(function( data ) {
+         alert(data);
+
+     }).fail(function(xhr, status, error) {
+        $('#login').show();
+        $('#attendance').hide();
+    });
    };
 
-   function onError(error) {
-      alert('code: '    + error.code    + '\n' +'message: ' + error.message + '\n');
+   function onError2(error) {
+      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n')
    }
+
 }
+
+function logOut(){
+     localStorage.clear();
+     $('#login').show();
+     $('#attendance').hide();
+}
+
