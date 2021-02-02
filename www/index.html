@@ -54,12 +54,25 @@
             <div id="attendance">
                 <p>
                     </br>
-                    Bienvenido {nombre}
+                    Bienvenido <div id="employee_name"></div>
                     </br>
                     </br>
                     Fecha y hora de la última fichada:
-                    21/01/2021 14:30 (E)
+                    <div id="attendance_msg"></div>
                 </p>
+                <script>
+                // Check browser support
+                if (typeof(Storage) !== "undefined") {
+                  // Store
+                  //localStorage.setItem("lastname", "Smith");
+                  // Retrieve
+                  document.getElementById("employee_name").innerHTML = localStorage.getItem("employee_name");
+                  document.getElementById("attendance_msg").innerHTML = localStorage.getItem("attendance");
+                 }
+                 //else {
+                //   document.getElementById("employee_name").innerHTML = "Sorry, your browser does not support Web Storage...";
+                // }
+                </script>
                 <button id="sendAtt" class="button button2">Fichar</button>
                 <button id="logout" class="button button2">Cerrar Sesión</button>
                 <!--<button id = "sendAtt" class="button button2">Enviar Asistencia</button>-->

@@ -19,7 +19,15 @@
 var loged = false;
 var user = 'regaby@gmail.com';
 var pass = 'test';
-const URL =  'https://empleados.polyfilm.com.ar/attendace';
+var employee_name = 'Test';
+var attendance_datetime = 'Test';
+var attendance_state = 'Test';
+var attendance = 'Test';
+// const URL_LOGIN =  'https://empleados.polyfilm.com.ar/login';
+// const URL =  'https://empleados.polyfilm.com.ar/attendace';
+const URL_LOGIN =  'http://186.64.120.136:98/login';
+const URL_GET_LOGIN =  'http://186.64.120.136:98/get_login';
+const URL =  'http://186.64.120.136:98/attendace';
 
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
@@ -32,10 +40,17 @@ function onDeviceReady() {
    //document.getElementById('deviceready').classList.add('ready');
    user = localStorage.getItem("user");
    pass = localStorage.getItem("pass");
+   uid = localStorage.getItem("uid");
+   employee_name = localStorage.getItem("employee_name");
+   attendance_datetime = localStorage.getItem("attendance_datetime");
+   attendance_state = localStorage.getItem("attendance_state");
+   attendance = localStorage.getItem("attendance");
+
+
    //$('#user').val('regaby@gmail.com');
    //$('#password').val('test');
 
-   if (user){
+   if (uid){
       $('#login').hide();
       $('#attendance').show();
    } else{
@@ -43,11 +58,11 @@ function onDeviceReady() {
       $('#attendance').hide();
 
    }
-   document.getElementById("loginbtn").addEventListener("click", sendloginAtt);   
-   document.getElementById("sendAtt").addEventListener("click", sendAtt);   
-   document.getElementById("logout").addEventListener("click", logOut);   
+   document.getElementById("loginbtn").addEventListener("click", sendloginAtt);
+   document.getElementById("sendAtt").addEventListener("click", sendAtt);
+   document.getElementById("logout").addEventListener("click", logOut);
 
-   
+
 }
 
 
@@ -55,22 +70,40 @@ function sendloginAtt(){
    var options = {
       enableHighAccuracy: true,
       maximumAge: 0,
-      timeout: 5000,      
+      timeout: 5000,
    }
    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 
    function onSuccess(position) {
       user = $('#user').val();
       pass = $('#password').val();
-      $.post( URL, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
+      //$.post( URL_LOGIN, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
+      $.post( URL_LOGIN, {user: user, pass: pass})
       .done(function( data ) {
 
-         $('#login').hide();
-         $('#attendance').show();
-
-         alert(data);
-          localStorage.setItem("user", user);
-          localStorage.setItem("pass",pass);
+         // $('#login').hide();
+         // $('#attendance').show();
+         // if not data:
+         //    alert("Usuario/Contraseña incorrecto");
+         // else:
+         var obj = JSON.parse(data);
+         if (obj['uid'] != false){
+            localStorage.setItem("user", user);
+            localStorage.setItem("pass",pass);
+            localStorage.setItem("uid",obj['uid']);
+            // datas {'uid': 879, 'attendance_state': 'S', 'attendance_datetime': '19/01/2021 15:06:07', 'employee_name': 'ABUIN IVAN LEONEL'}
+            localStorage.setItem("employee_name", obj['employee_name']);
+            localStorage.setItem("attendance_datetime", obj['attendance_datetime']);
+            localStorage.setItem("attendance_state", obj['attendance_state']);
+            localStorage.setItem("attendance", obj['attendance']);
+            //alert(obj['uid']);
+            $('#login').hide();
+            $('#attendance').show();
+         } else {
+            alert("Usuario/Contraseña incorrecto");
+         }
+          // localStorage.setItem("user", user);
+          // localStorage.setItem("pass",pass);
 
 
      }).fail(function(xhr, status, error) {
