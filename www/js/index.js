@@ -17,17 +17,16 @@
  * under the License.
  */
 var loged = false;
-var user = 'regaby@gmail.com';
+var user = 'test';
 var pass = 'test';
 var employee_name = 'Test';
 var attendance_datetime = 'Test';
 var attendance_state = 'Test';
 var attendance = 'Test';
-// const URL_LOGIN =  'https://empleados.polyfilm.com.ar/login';
-// const URL =  'https://empleados.polyfilm.com.ar/attendace';
-const URL_LOGIN =  'http://186.64.120.136:98/login';
-const URL_GET_LOGIN =  'http://186.64.120.136:98/get_login';
-const URL =  'http://186.64.120.136:98/attendace';
+const URL_LOGIN =  'https://empleados.polyfilm.com.ar/login';
+const URL =  'https://empleados.polyfilm.com.ar/attendace';
+// const URL_LOGIN =  'http://186.64.120.136:98/login';
+// const URL =  'http://186.64.120.136:98/attendace';
 
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
@@ -96,6 +95,8 @@ function sendloginAtt(){
             localStorage.setItem("attendance_datetime", obj['attendance_datetime']);
             localStorage.setItem("attendance_state", obj['attendance_state']);
             localStorage.setItem("attendance", obj['attendance']);
+            $('#employee_name').html(obj['employee_name']);
+            $('#attendance_msg').html(obj['attendance']);
             //alert(obj['uid']);
             $('#login').hide();
             $('#attendance').show();
@@ -128,7 +129,24 @@ function sendAtt(){
    function onSuccess2(position) {
       $.post( URL, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
       .done(function( data ) {
-         alert(data);
+         var obj = JSON.parse(data);
+         if (obj['uid'] != false){
+            localStorage.setItem("user", user);
+            localStorage.setItem("pass",pass);
+            localStorage.setItem("uid",obj['uid']);
+            localStorage.setItem("employee_name", obj['employee_name']);
+            localStorage.setItem("attendance_datetime", obj['attendance_datetime']);
+            localStorage.setItem("attendance_state", obj['attendance_state']);
+            localStorage.setItem("attendance", obj['attendance']);
+            $('#employee_name').html(obj['employee_name']);
+            $('#attendance_msg').html(obj['attendance']);
+            //alert(obj['uid']);
+            // $('#login').hide();
+            // $('#attendance').show();
+            alert(obj['msg']);
+         } else {
+            alert("Usuario/Contraseña incorrecto");
+         }
 
      }).fail(function(xhr, status, error) {
         $('#login').show();
