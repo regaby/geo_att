@@ -68,8 +68,8 @@ function onDeviceReady() {
 function sendloginAtt(){
    var options = {
       enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 5000,
+      maximumAge:Infinity,
+      timeout:60000
    }
    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 
@@ -122,7 +122,8 @@ function sendloginAtt(){
 function sendAtt(){
    var options = {
       enableHighAccuracy: true,
-      maximumAge: 3600000
+      maximumAge:Infinity,
+      timeout:60000
    }
    var watchID = navigator.geolocation.getCurrentPosition(onSuccess2, onError2, options);
 
