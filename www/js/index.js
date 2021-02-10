@@ -60,22 +60,13 @@ function onDeviceReady() {
    document.getElementById("loginbtn").addEventListener("click", sendloginAtt);
    document.getElementById("sendAtt").addEventListener("click", sendAtt);
    document.getElementById("logout").addEventListener("click", logOut);
-
-
 }
 
 
 function sendloginAtt(){
-   var options = {
-      enableHighAccuracy: true,
-      maximumAge:Infinity,
-      timeout:60000
-   }
-   var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
-
-   function onSuccess(position) {
       user = $('#user').val();
       pass = $('#password').val();
+
       //$.post( URL_LOGIN, {user: user, pass: pass, lat: position.coords.latitude , lon: position.coords.longitude})
       $.post( URL_LOGIN, {user: user, pass: pass})
       .done(function( data ) {
@@ -105,17 +96,10 @@ function sendloginAtt(){
          }
           // localStorage.setItem("user", user);
           // localStorage.setItem("pass",pass);
-
-
-     }).fail(function(xhr, status, error) {
-        alert(status);
-        alert(error);
-    });
-   };
-
-   function onError(error) {
-      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n')
-   }
+       }).fail(function(xhr, status, error) {
+          alert(status);
+          alert(error);
+      });
 
 }
 
